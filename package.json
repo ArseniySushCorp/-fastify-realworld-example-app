@@ -17,11 +17,16 @@
   "license": "ISC",
   "dependencies": {
     "@sinclair/typebox": "^0.23.4",
+    "@typegoose/typegoose": "^9.7.0",
+    "@types/ramda": "^0.27.64",
     "fastify": "^3.0.0",
     "fastify-autoload": "^3.10.0",
     "fastify-cli": "^2.15.0",
     "fastify-plugin": "^3.0.0",
-    "fastify-sensible": "^3.1.2"
+    "fastify-sensible": "^3.1.2",
+    "mongodb": "^4.4.0",
+    "mongoose": "^6.2.3",
+    "ramda": "^0.28.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.8",
