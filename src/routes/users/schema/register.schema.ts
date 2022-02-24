@@ -1,5 +1,6 @@
 import { Static, Type } from "@sinclair/typebox"
 import { FastifySchema } from "fastify"
+import { ErrorResponse } from "../../../shared/schema"
 
 const CreateUserDto = Type.Object({
   username: Type.String(),
@@ -10,11 +11,13 @@ const CreateUserDto = Type.Object({
 export type CreateUserDto = Static<typeof CreateUserDto>
 
 const CreateUserResponse = Type.Object({
-  email: Type.String({ format: "email" }),
-  token: Type.String(),
-  username: Type.String(),
-  bio: Type.String(),
-  image: Type.String()
+  user: Type.Object({
+    email: Type.String({ format: "email" }),
+    token: Type.String(),
+    username: Type.String(),
+    bio: Type.String(),
+    image: Type.String()
+  })
 })
 
 export type CreateUserResponse = Static<typeof CreateUserResponse>
@@ -27,6 +30,7 @@ export type RegisterRequest = {
 export const RegisterSchema: FastifySchema = {
   body: CreateUserDto,
   response: {
-    201: CreateUserResponse
+    201: CreateUserResponse,
+    400: ErrorResponse
   }
 }
