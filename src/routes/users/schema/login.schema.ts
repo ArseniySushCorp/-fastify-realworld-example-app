@@ -1,32 +1,24 @@
+import { FastifySchema } from "fastify"
 import { Static, Type } from "@sinclair/typebox"
+import { UserReply, UserReplyType } from "./../../../shared/schema"
 
 const LoginUserDto = Type.Object({
-  email: Type.String({ format: "email" }),
-  password: Type.String()
+  user: Type.Object({
+    email: Type.String({ format: "email" }),
+    password: Type.String()
+  })
 })
 
 export type LoginUserDto = Static<typeof LoginUserDto>
 
-const LoginUserResponse = Type.Object({
-  user: Type.Object({
-    email: Type.String({ format: "email" }),
-    token: Type.String(),
-    username: Type.String(),
-    bio: Type.String(),
-    image: Type.String()
-  })
-})
-
-export type LoginUserResponse = Static<typeof LoginUserResponse>
-
 export type LoginRequest = {
   Body: LoginUserDto
-  Reply: LoginUserResponse
+  Reply: UserReplyType
 }
 
-export const LoginSchema = {
+export const LoginSchema: FastifySchema = {
   body: LoginUserDto,
   response: {
-    200: LoginUserResponse
+    200: UserReply
   }
 }

@@ -1,7 +1,7 @@
 import { pick } from "ramda"
 import { genSalt, hash } from "bcryptjs"
-import UserModel, { User } from "../../models/user"
-import { CreateUserDto } from "./schema/register.schema"
+import UserModel, { User } from "../models/user"
+import { CreateUserDto } from "../routes/users/schema/register.schema"
 
 class UserService {
   async findUser({ email }: { email: string }): Promise<User | null> {
@@ -10,10 +10,10 @@ class UserService {
     return user
   }
 
-  async createUser(body: CreateUserDto) {
+  async createUser({ user }: CreateUserDto) {
     const salt = await genSalt(10)
 
-    const newUser = await UserModel.create({ ...body, passwordHash: await hash(body.password, salt) })
+    const newUser = await UserModel.create({ ...user, passwordHash: await hash(user.password, salt) })
 
     return this.buildUserResponse(newUser.toObject())
   }
