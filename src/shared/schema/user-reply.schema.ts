@@ -6,7 +6,7 @@ export const UserReply = Type.Object({
     token: Type.String(),
     username: Type.String(),
     bio: Type.String(),
-    image: Type.String()
+    image: Type.String({ format: "uri", default: "" })
   })
 })
 

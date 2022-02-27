@@ -1,3 +1,4 @@
+import { UpdateUserDto } from "./../routes/user/schema/update-user.schema"
 import { pick } from "ramda"
 import { genSalt, hash } from "bcryptjs"
 import UserModel, { User } from "../models/user"
@@ -26,8 +27,12 @@ class UserService {
     return userResponse
   }
 
-  async updateUser() {
-    // UserModel.findByIdAndUpdate()
+  async updateUser({ _id }: User, { user }: UpdateUserDto): Promise<User | null> {
+    const updatedUser = await UserModel.findByIdAndUpdate(_id, user, { new: true }).exec()
+
+    if (!updatedUser) return null
+
+    return updatedUser.toObject()
   }
 }
 

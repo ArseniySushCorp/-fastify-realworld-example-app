@@ -28,15 +28,11 @@ const UsersRoute: FastifyPluginAsync = async (fastify): Promise<void> => {
     const { email, password } = request.body.user
     const existUser = await userService.findUser({ email })
 
-    if (!existUser) throw fastify.httpErrors.unauthorized(errors.USER_NOT_FOUND)
+    if (!existUser) throw fastify.httpErrors.unauthorized(errors.USER_NOT_FOUND_ERROR)
 
     const isCorrectPass = await compare(password, existUser.passwordHash)
 
-    if (!isCorrectPass) throw fastify.httpErrors.unauthorized(errors.WRONG_PASS)
-
-    const obj = existUser
-
-    console.log({ ...obj }, "existUser")
+    if (!isCorrectPass) throw fastify.httpErrors.unauthorized(errors.WRONG_PASS_ERROR)
 
     const responseWithToken = {
       ...userService.buildUserResponse(existUser),

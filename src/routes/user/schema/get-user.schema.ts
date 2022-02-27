@@ -1,12 +1,12 @@
 import { FastifySchema } from "fastify"
 import { RouteGenericInterface } from "fastify/types/route"
-import { UserReply, UserReplyType, ErrorReply } from "./../../../shared/schema"
+import { UserReply, UserReplyType, ErrorReply } from "../../../shared/schema"
 
-export interface UserRequest extends RouteGenericInterface {
+export interface GetUserRequest extends RouteGenericInterface {
   Reply: UserReplyType
 }
 
-export const UserSchema: FastifySchema = {
+export const GetUserSchema: FastifySchema = {
   response: {
     200: UserReply,
     401: ErrorReply

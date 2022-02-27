@@ -10,7 +10,7 @@ export default fp<FastifyJWTOptions>(async (fastify, opts) => {
 
   fastify.decorate("authenticate", async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      console.log(await request.jwtVerify<User>())
+      await request.jwtVerify<User>()
     } catch (err) {
       fastify.log.error(err)
       reply.send(err)
