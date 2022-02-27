@@ -3,12 +3,10 @@ import { compare } from "bcryptjs"
 
 import { RegisterRequest, RegisterSchema } from "./schema/register.schema"
 import { LoginRequest, LoginSchema } from "./schema/login.schema"
-import UserService from "../../services/user.service"
+import userService from "../../services/user.service"
 import errors from "../../constants/errors"
 
 const UsersRoute: FastifyPluginAsync = async (fastify): Promise<void> => {
-  const userService = new UserService()
-
   fastify.post<RegisterRequest>("/", { schema: RegisterSchema }, async (request, reply) => {
     const { email } = request.body.user
     const existUser = await userService.findUser({ email })
@@ -17,7 +15,10 @@ const UsersRoute: FastifyPluginAsync = async (fastify): Promise<void> => {
 
     const createdUser = await userService.createUser(request.body)
 
-    const responseWithToken = { ...createdUser, token: `Bearer ${fastify.jwt.sign({ email })}` }
+    const responseWithToken = {
+      ...userService.buildUserResponse(createdUser),
+      token: `Bearer ${fastify.jwt.sign(createdUser)}`
+    }
 
     reply.status(201)
     return { user: responseWithToken }
@@ -33,9 +34,14 @@ const UsersRoute: FastifyPluginAsync = async (fastify): Promise<void> => {
 
     if (!isCorrectPass) throw fastify.httpErrors.unauthorized(errors.WRONG_PASS)
 
-    const userResponse = userService.buildUserResponse(existUser)
+    const obj = existUser
 
-    const responseWithToken = { ...userResponse, token: `Bearer ${fastify.jwt.sign({ email })}` }
+    console.log({ ...obj }, "existUser")
+
+    const responseWithToken = {
+      ...userService.buildUserResponse(existUser),
+      token: `Bearer ${fastify.jwt.sign(existUser)}`
+    }
 
     reply.status(201)
     return { user: responseWithToken }

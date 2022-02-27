@@ -1,12 +1,7 @@
 import fp from "fastify-plugin"
 import fastifyJwt, { FastifyJWTOptions } from "fastify-jwt"
 import { FastifyReply, FastifyRequest } from "fastify"
-
-declare module "fastify" {
-  export interface FastifyRequest {
-    decodedUser: { email: string }
-  }
-}
+import { User } from "../models/user"
 
 export default fp<FastifyJWTOptions>(async (fastify, opts) => {
   fastify.register(fastifyJwt, {
@@ -15,12 +10,19 @@ export default fp<FastifyJWTOptions>(async (fastify, opts) => {
 
   fastify.decorate("authenticate", async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      request.decodedUser = await request.jwtVerify()
+      console.log(await request.jwtVerify<User>())
     } catch (err) {
+      fastify.log.error(err)
       reply.send(err)
     }
   })
 })
+
+declare module "fastify-jwt" {
+  interface FastifyJWT {
+    payload: User
+  }
+}
 
 declare module "fastify" {
   export interface FastifyInstance {

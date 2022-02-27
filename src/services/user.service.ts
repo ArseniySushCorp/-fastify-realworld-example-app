@@ -7,15 +7,17 @@ class UserService {
   async findUser({ email }: { email: string }): Promise<User | null> {
     const user = await UserModel.findOne({ email }).exec()
 
-    return user
+    if (!user) return null
+
+    return user.toObject()
   }
 
-  async createUser({ user }: CreateUserDto) {
+  async createUser({ user }: CreateUserDto): Promise<User> {
     const salt = await genSalt(10)
 
     const newUser = await UserModel.create({ ...user, passwordHash: await hash(user.password, salt) })
 
-    return this.buildUserResponse(newUser.toObject())
+    return newUser.toObject()
   }
 
   buildUserResponse(user: User): Pick<User, "email" | "username" | "bio" | "image"> {
@@ -23,6 +25,12 @@ class UserService {
 
     return userResponse
   }
+
+  async updateUser() {
+    // UserModel.findByIdAndUpdate()
+  }
 }
 
-export default UserService
+const userService = new UserService()
+
+export default userService

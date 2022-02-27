@@ -1,5 +1,6 @@
 import { Static, Type } from "@sinclair/typebox"
 import { FastifySchema } from "fastify"
+import { RouteGenericInterface } from "fastify/types/route"
 import { UserReply, UserReplyType, ErrorReply } from "./../../../shared/schema"
 
 const CreateUserDto = Type.Object({
@@ -12,7 +13,7 @@ const CreateUserDto = Type.Object({
 
 export type CreateUserDto = Static<typeof CreateUserDto>
 
-export type RegisterRequest = {
+export interface RegisterRequest extends RouteGenericInterface {
   Body: CreateUserDto
   Reply: UserReplyType
 }
